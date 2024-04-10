@@ -5,7 +5,9 @@ let things = {
 
 async function getUserInformation() {
   try {
-    const res = await fetch(`http://localhost:8080/api/sessions/status`);
+    const res = await fetch(
+      `https://proyectofinal-romero-cruz.onrender.com/api/sessions/status`
+    );
     const dataJson = await res.json();
     const data = dataJson.data;
     return data;
@@ -17,7 +19,9 @@ async function getUserInformation() {
 
 async function getProducts() {
   try {
-    const res = await fetch(`http://localhost:8080/api/products/all`);
+    const res = await fetch(
+      `https://proyectofinal-romero-cruz.onrender.com/api/products/all`
+    );
     const dataJson = await res.json();
     const data = dataJson.data;
     return data;
@@ -32,24 +36,27 @@ async function getCart() {
 
   try {
     const res = await fetch(
-      `http://localhost:8080/api/users/${userSession.username}/`
+      `https://proyectofinal-romero-cruz.onrender.com/api/users/${userSession.username}/`
     );
     const dataJson = await res.json();
     const data = dataJson.data;
 
     if (!data.cartId) {
       try {
-        const response = await fetch(`http://localhost:8080/api/carts`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://proyectofinal-romero-cruz.onrender.com/api/carts`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const dataJsonPost = await response.json();
         const dataPost = dataJsonPost.data;
         try {
           const response = await fetch(
-            `http://localhost:8080/api/users/${userSession.username}/cart/${dataPost}`,
+            `https://proyectofinal-romero-cruz.onrender.com/api/users/${userSession.username}/cart/${dataPost}`,
             {
               method: "POST",
               headers: {
@@ -82,7 +89,7 @@ async function addToCart(productId) {
   try {
     const cartId = things.carritoId;
     const response = await fetch(
-      `http://localhost:8080/api/carts/${cartId}/products/${productId}`,
+      `https://proyectofinal-romero-cruz.onrender.com/api/carts/${cartId}/products/${productId}`,
       {
         method: "POST",
         headers: {
@@ -159,15 +166,18 @@ async function displayProducts() {
 }
 
 document.getElementById("buyButton").addEventListener("click", function () {
-  fetch(`http://localhost:8080/api/carts/${things.carritoId}/purchase`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: things.email,
-    }),
-  })
+  fetch(
+    `https://proyectofinal-romero-cruz.onrender.com/api/carts/${things.carritoId}/purchase`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: things.email,
+      }),
+    }
+  )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");

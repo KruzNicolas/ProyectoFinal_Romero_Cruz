@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const REGISTER_URL =
-      "http://localhost:8080/api/sessions/restorepasswordmail";
+      "https://proyectofinal-romero-cruz.onrender.com/api/sessions/restorepasswordmail";
 
     fetch(REGISTER_URL, {
       method: "POST",

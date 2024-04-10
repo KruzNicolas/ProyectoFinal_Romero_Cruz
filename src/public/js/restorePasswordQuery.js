@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
       token: token,
     };
 
-    const REGISTER_URL = "http://localhost:8080/api/sessions/restorepassword";
+    const REGISTER_URL =
+      "https://proyectofinal-romero-cruz.onrender.com/api/sessions/restorepassword";
 
     fetch(REGISTER_URL, {
       method: "POST",
@@ -31,7 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error(`Error: ${data.data}`);
           errorMessage.textContent = `Error: ${data.data}`;
         } else {
-          window.location.href = "http://localhost:8080/login";
+          window.location.href =
+            "https://proyectofinal-romero-cruz.onrender.com/login";
           console.log("Data:", data.data);
         }
       });
@@ -39,5 +41,5 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function toLogin() {
-  window.location.href = "http://localhost:8080/login";
+  window.location.href = "https://proyectofinal-romero-cruz.onrender.com/login";
 }
