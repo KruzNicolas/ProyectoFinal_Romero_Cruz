@@ -8,7 +8,7 @@
     "start_server": "nodemon src/app --port=8080 --mode=dev",
     "start_doc": "pnpm --prefix documentation/ run dev",
     "dev": "concurrently --kill-others \"pnpm run start_server\" \"pnpm run start_doc\"",
-    "start": "nodemon src/app --port=8080 --mode=prod"
+    "start": "node src/app --port=8080 --mode=prod"
   },
   "keywords": [],
   "author": "",
