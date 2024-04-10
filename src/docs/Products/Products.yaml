@@ -1,0 +1,340 @@
+# Bajo paths definimos las rutas
+# Recordar que en app.js para Users tenemos agregado el prefijo /api/users)
+paths:
+  /api/products/all:
+    # En cada una agregamos los métodos habilitados
+    # Este es el método get que no recibe parámetros para retornar todos los usuarios
+    get:
+      summary: "Get a list of all game products"
+      # Este título encabezará la lista
+      tags:
+        - Products
+      # Es importante agregar esta sección de códigos de respuesta
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  # Esta línea hace referencia al esquema de User (tomado desde el modelo de Mongoose)
+                  # Se puede ver el esquema indicado más abajo, en components
+                  $ref: "#/components/schemas/Products"
+        "500":
+          description: "general ERROR"
+
+  # Notar el uso de llaves para indicar el parámetro {uid}
+  /api/products/{pid}:
+    get:
+      summary: "Get a single product"
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  # Esta línea hace referencia al esquema de User (tomado desde el modelo de Mongoose)
+                  # Se puede ver el esquema indicado más abajo, en components
+                  $ref: "#/components/schemas/Products"
+        "500":
+          description: "general ERROR"
+    put:
+      summary: "Update a product"
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+      requestBody:
+        description: "Not all Parameters are Required"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/UpdateProducts"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UpdateProducts"
+        "500":
+          description: "general ERROR"
+    delete:
+      summary: "Delete a product"
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeleteProducts"
+        "500":
+          description: "general ERROR"
+
+  /api/products/:
+    post:
+      summary: "Create a product"
+      tags:
+        - Products
+      requestBody:
+        description: "Body Parameters Required"
+        required: true
+        content:
+          application/json:
+            schema:
+              # Esta referencia permite indicar la lista de campos que se deberían
+              # enviar en el body al contactar a este endpoint (ver requestBodies más abajo)
+              $ref: "#/components/requestBodies/CreateProducts"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  # Esta línea hace referencia al esquema de User (tomado desde el modelo de Mongoose)
+                  # Se puede ver el esquema indicado más abajo, en components
+                  $ref: "#/components/schemas/CreateProducts"
+        "500":
+          description: "general ERROR"
+    get:
+      summary: "Get a list of products with pagination"
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          description: "Number of items to return per page"
+          required: false
+          schema:
+            type: integer
+            default: 10 # Valor por defecto si no se especifica
+        - name: page
+          in: query
+          description: "Page number"
+          required: false
+          schema:
+            type: integer
+            default: 1 # Valor por defecto si no se especifica
+        - name: sort
+          in: query
+          description: "Sort order of the price (asc or desc)"
+          required: false
+          schema:
+            type: string
+            enum: ["asc", "desc"]
+        - name: category
+          in: query
+          description: "Filter by category"
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: "Filter by status"
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  # Esta línea hace referencia al esquema de User (tomado desde el modelo de Mongoose)
+                  # Se puede ver el esquema indicado más abajo, en components
+                  $ref: "#/components/schemas/ProductPagination"
+        "500":
+          description: "general ERROR"
+
+components:
+  schemas:
+    # Este esquema se coloca por separado, para poder referenciarlo en distintos
+    # endpoints arriba
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: "ID MongoDB"
+        title:
+          type: string
+          description: "Title"
+        description:
+          type: string
+          description: "Description"
+        code:
+          type: number
+          description: "Code"
+        price:
+          type: number
+          description: "Price"
+        status:
+          type: boolean
+          description: "status"
+        stock:
+          type: number
+          description: "stock"
+        category:
+          type: string
+          description: "category"
+        thumbnail:
+          type: string
+          description: "thumbnail"
+        owner:
+          type: string
+          description: "owner"
+      example:
+        _id: 6572daf5a24f67e6dbd240d5
+        title: Red Dead Redemption 2
+        description: A Western-themed action-adventure game...
+        code: 3456
+        price: 49.99
+        status: true
+        stock: 99921
+        category: Action
+        thumbnail: https://example.com/reddeadredemption2.jpg
+        owner: ADMIN
+    CreateProducts:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Product added with ID: 6572daf5a24f67g7dbd683g7"
+    UpdateProducts:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Product with ID: 6572daf5a24f67e6dbd240e1 has updated"
+    DeleteProducts:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Product with ID: 6572daf5a24f67e6dbd240e1 has deleted"
+    ProductPagination:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: "ID MongoDB"
+        title:
+          type: string
+          description: "Title"
+        description:
+          type: string
+          description: "Description"
+        code:
+          type: number
+          description: "Code"
+        price:
+          type: number
+          description: "Price"
+        status:
+          type: boolean
+          description: "Status"
+        stock:
+          type: number
+          description: "Stock"
+        category:
+          type: string
+          description: "Category"
+        thumbnail:
+          type: string
+          description: "Thumbnail URL"
+
+      example:
+        _id: "6572daf5a24f67e6dbd240e8"
+        title: "The Sims 4"
+        description: "A life simulation game where players create and..."
+        code: 5673
+        price: 39.99
+        status: true
+        stock: 4
+        category: "Simulation"
+        thumbnail: "https://example.com/thesims4.jpg"
+        id: "6572daf5a24f67e6dbd240e8"
+
+  # Cuál es la diferencia entre schemas y requestBodies?
+  # schemas permite indicar esquemas completos, requestBodies indica los campos
+  # que debería adjuntar una determinada solicitud (en este caso updateUser)
+  requestBodies:
+    CreateProducts:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: number
+        price:
+          type: number
+        status:
+          type: boolean
+        stock:
+          type: number
+        category:
+          type: string
+        thumbnail:
+          type: string
+      example:
+        title: Honkai Star Rail,
+        description: role-playing gacha video game developed by miHoYo...,
+        code: 6850,
+        price: 29.99,
+        status: true,
+        stock: 9999,
+        category: RPG,
+        thumbnail: https://example.com/honkaistarrail.jpg
+    UpdateProducts:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: number
+        price:
+          type: number
+        status:
+          type: boolean
+        stock:
+          type: number
+        category:
+          type: string
+        thumbnail:
+          type: string
+      example:
+        price: 19.99,
+        status: false,

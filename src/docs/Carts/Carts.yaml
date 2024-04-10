@@ -1,0 +1,282 @@
+paths:
+  /api/carts/:
+    post:
+      summary: "Create a new Cart"
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CreateCart"
+        "500":
+          description: "general ERROR"
+
+  /api/carts/{cid}:
+    get:
+      summary: "Get a single cart"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "500":
+          description: "general ERROR"
+    post:
+      summary: "Add an array of products to a cart"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+      requestBody:
+        description: "Parameters are Required"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/Products"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CartUpdate"
+        "500":
+          description: "general ERROR"
+    delete:
+      summary: "Delete all products from a cart"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeleteProductsCart"
+        "500":
+          description: "general ERROR"
+
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: "Add a single product to a cart"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+        - name: pid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AddSingleProductCart"
+        "500":
+          description: "general ERROR"
+    delete:
+      summary: "Delete a product from a cart"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+        - name: pid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeleteSingleProductCart"
+        "500":
+          description: "general ERROR"
+    put:
+      summary: "Update a quantity of a product in a cart"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+        - name: pid
+          in: path
+          required: true
+      requestBody:
+        description: "Parameters are Required"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/Quantity"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AddQuantityProductCart"
+        "500":
+          description: "general ERROR"
+
+  /api/carts/{cid}/purchase:
+    post:
+      summary: "Complete a purchase"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PurchaseCompleted"
+        "500":
+          description: "general ERROR"
+
+components:
+  schemas:
+    CreateCart:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Cart created with ID: 65e6c5e90e66f04d3ae50bc6"
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        status:
+          type: string
+      example:
+        _id: "65e6c5e90e66f04d3ae50bc6"
+        products:
+          - productId: "6572daf5a24f67e6dbd240e1"
+            quantity: 5
+          - productId: "6572daf5a24f67e6dbd240e3"
+            quantity: 8
+        status: "ONGOING"
+    Product:
+      type: object
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: number
+      example:
+        - productId: "6572daf5a24f67e6dbd240e1"
+          quantity: 5
+        - productId: "6572daf5a24f67e6dbd240e3"
+          quantity: 8
+    AddSingleProductCart:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Product with ID: 6572daf5a24f67e6dbd240e1 added in Cart with ID: 65e6c5e90e66f04d3ae50bc6"
+    DeleteSingleProductCart:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Product with ID: 6572daf5a24f67e6dbd240e1 removed from Cart with ID: 65e6c5e90e66f04d3ae50bc6"
+    CartUpdate:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Cart updated"
+    AddQuantityProductCart:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Update the quantity in: 26 of a product with ID: 6572daf5a24f67e6dbd240e1 in cart with ID: 65e6c5e90e66f04d3ae50bc6"
+    DeleteProductsCart:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Cart products are deleted"
+    PurchaseCompleted:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: "Purchase completed"
+  requestBodies:
+    Products:
+      type: object
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: number
+      example:
+        - productId: "6572daf5a24f67e6dbd240e1"
+          quantity: 5
+        - productId: "6572daf5a24f67e6dbd240e3"
+          quantity: 8
+    Quantity:
+      type: object
+      properties:
+        quantity:
+          type: number
+      example:
+        quantity: 26
